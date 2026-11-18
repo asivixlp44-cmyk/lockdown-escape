@@ -364,10 +364,15 @@ Repository secrets to add:
 - **`LEGION_DEPLOY_TOKEN`**, from hosting.bloxity.io.
 - **`LEGION_DEPLOY_TOKEN_STAGE`**, from hosting.stage.bloxity.io, to ship to stage too. See docs.bloxity.io › Environments › Getting your game onto stage.
 
-The game is **not hosted yet**: the folder is not a git repository and nothing has been pushed. When it is:
-- The repo is `LEGiON-Platforms/lockdown-escape`, pushed as `asivixlp44-cmyk`.
-- Every push to `main` deploys to https://lockdown-escape.play.bloxity.io.
-- `node tests/live-smoke.mjs` checks the live game.
+**Live at https://lockdown-escape.play.bloxity.io**, first deployed on 18 November 2026.
+
+- The repository is `asivixlp44-cmyk/lockdown-escape` (private). Every push to `main` deploys there.
+- The server's `/health` on https://lockdown-escape.host.bloxity.io answers `{"ok":true,"db":true}`, so Legion's MongoDB is connected.
+- `node tests/live-smoke.mjs` checks the live game. On the first day it joined a server with no console errors.
+- **The live page's network, checked on the first day:**
+  - `Legion.SDK.environment()` says `prod`.
+  - The page sends `POST https://play.bloxity.io/v1/play/lockdown-escape`, then opens its game socket on `wss://play.bloxity.io/v1/ws/...`.
+  - Nothing connects to `lockdown-escape.host.bloxity.io`.
 
 `bloxity-setup.html` has every field of Bloxity's Create New Game form with copy buttons, and the two covers.
 
