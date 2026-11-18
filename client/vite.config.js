@@ -43,6 +43,25 @@ export default defineConfig({
     build: {
         target: 'es2022',
         chunkSizeWarningLimit: 1500,
-        rollupOptions: CDN ? { external: (id) => id === 'three' || id.startsWith('three/') } : {},
+        rollupOptions: {
+            ...(CDN ? { external: (id) => id === 'three' || id.startsWith('three/') } : {}),
+            // one small file per source file instead of one big bundle: the first time a fresh deploy's file is fetched, Boxity's hosting
+            // hands each file out slowly (a few KB a second, seen from Sri Lanka), so many small files fetched side by side arrive far
+            // sooner than one big one. All of them are modulepreloaded at once from the page
+            output: {
+                codeSplitting: {
+                    includeDependenciesRecursively: false,
+                    groups: [{
+                        name(id) {
+                            const p = id.replace(/\\/g, '/');
+                            const pkg = p.match(/\/node_modules\/((?:@[\w.-]+\/)?[\w.-]+)\//);
+                            if (pkg) return 'vendor-' + pkg[1].replace(/[@/]/g, '_');
+                            const m = p.match(/\/(client\/src|shared)\/([\w-]+)\.js$/);
+                            return m ? (m[1] === 'shared' ? 'shared-' : '') + m[2] : null;
+                        },
+                    }],
+                },
+            },
+        },
     },
 });
