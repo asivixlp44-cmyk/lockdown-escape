@@ -7,7 +7,9 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23ffc21a'/%3E%3Ccircle cx='52' cy='12' r='9' fill='%23ff3a4a' stroke='%23141428' stroke-width='3'/%3E%3Cpath d='M8 18C8 12 12 9 18 9L46 9C52 9 56 12 56 18L58 51C58 56.5 54.5 59.5 49 59.5L15 59.5C9.5 59.5 6 56.5 6 51Z' fill='%23f0c040' stroke='%23141428' stroke-width='4'/%3E%3Cpath d='M15.5 12.5L48.5 12.5C51.5 12.5 53 14.5 53 17.5L51.5 40C51.3 43 49.5 45 46.5 45L17.5 45C14.5 45 12.7 43 12.5 40L11 17.5C11 14.5 12.5 12.5 15.5 12.5Z' fill='%23fff3c8'/%3E%3Cpath d='M18.5 29H29.5M24 23.5V34.5M35 25.5L39.5 22.5V35M35.5 35H43.5' fill='none' stroke='%234a2a10' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Lilita+One&display=swap">
+<!-- the fonts never hold the page up: applied once they are in (a slow connection shows the fallback fonts meanwhile) -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Lilita+One&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Lilita+One&display=swap"></noscript>
 <style>
 :root {
     color-scheme: dark;
@@ -647,6 +649,7 @@ body.lowfx .panel { box-shadow: inset 0 0 0 0.16rem var(--edge), 0 0.5rem 0 0.1r
         </div>
     </div>
 </div>
+<script>/* While the game's code is still downloading (a slow connection, or a file the CDN hasn't cached yet), the loading screen says so; the game's own steps replace this text as soon as it runs. */ (function () { var el = document.getElementById("loading"), t0 = Date.now(), msgs = [[6000, "Downloading the game\u2026"], [15000, "Still downloading: a slow connection can take a minute\u2026"], [40000, "Almost downloaded, hang on\u2026"]]; function tick() { if (!el || window.__gameRunning) return; var s = Date.now() - t0, m = null; for (var i = 0; i < msgs.length; i++) if (s >= msgs[i][0]) m = msgs[i][1]; if (m && (el.textContent === "Loading\u2026" || el.dataset.pre === "1")) { el.textContent = m; el.dataset.pre = "1"; } if (s < 120000) setTimeout(tick, 1000); } setTimeout(tick, 1000); })();</script>
 <script>/* The browser's "offline" hint is not trusted: on Windows a flapping virtual or VPN adapter fires it every half minute while the network works, and the Colyseus SDK would close the game's socket on each one. A connection that really drops still fails on its own and reconnects. */ addEventListener("offline", function (e) { e.stopImmediatePropagation(); }, true);</script>
 <script src="https://sdk.bloxity.io/v1/legion-sdk.min.js"></script>
 <script type="module" src="/src/main.js"></script>

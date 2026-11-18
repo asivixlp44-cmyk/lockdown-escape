@@ -191,6 +191,20 @@ jobs:
             *) echo "::error::Client upload failed with HTTP $code."; exit 1 ;;
           esac
 
+      # A freshly deployed file is slow the first time the CDN fetches it from Boxity's hosting (40+ s for the bundle seen from
+      # Sri Lanka), so fetch every new file once now, before players do (both encodings browsers ask for)
+      - name: Warm the CDN with the new files
+        continue-on-error: true
+        run: |
+          base="https://${{ steps.p.outputs.play }}"
+          sleep 10
+          files="$(curl -s --max-time 30 "$base/" | grep -oE '(/|\./)?assets/[A-Za-z0-9._-]+\.(js|css)' | sed -E 's#^\./#/#; s#^assets#/assets#' | sort -u)"
+          for f in / $files; do
+            for enc in br gzip; do
+              curl -s -o /dev/null --max-time 120 -H "Accept-Encoding: $enc" -w "%{http_code} %{time_total}s $enc $f\n" "$base$f" || true
+            done
+          done
+
       - name: Where it went
         run: |
           echo "Play (${{ matrix.target }}, ${{ steps.p.outputs.channel }}) at https://${{ steps.p.outputs.play }}"

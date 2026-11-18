@@ -2141,7 +2141,7 @@ function frame(now) {
 // =====================================================================================
 // Boot: build everything behind the loading screen, join, play (no start menu)
 // =====================================================================================
-function loadingText(t) { $('#loading').textContent = t; }
+function loadingText(t) { window.__gameRunning = true; const el = $('#loading'); el.textContent = t; delete el.dataset.pre; }
 let joining = false, joinTask = null, worldReady = null;
 async function joinServer() {
     const endpointTask = serverEndpoint();
@@ -2323,7 +2323,7 @@ async function prepareWorld() {
     const sounds = startSounds(getQuality() === 'low');
     const step = (t, k) => { loadingText(t); BX.loadingStep(t); if (k) $('#loadBar').style.width = Math.round(k * 100) + '%'; };
     step('Loading fonts…', 0.08);
-    try { await Promise.race([Promise.all([document.fonts.load('700 40px Fredoka'), document.fonts.load('400 40px "Lilita One"')]), sleep(2500)]); } catch (e) { /* fallback font */ }
+    try { await Promise.race([Promise.all([document.fonts.load('700 40px Fredoka'), document.fonts.load('400 40px "Lilita One"')]), sleep(1500)]); } catch (e) { /* fallback font */ }
     await warmHudText();
     step('Locking down the lab…', 0.18);
     buildView(0);
